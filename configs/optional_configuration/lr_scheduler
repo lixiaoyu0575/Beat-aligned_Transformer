@@ -1,0 +1,78 @@
+{
+  "StepLR": {
+      "type": "StepLR",
+      "args": {
+          "step_size": 50,
+          "gamma": 0.1
+      }
+    },
+  "MultiStepLR": {
+      "type": "MultiStepLR",
+      "args": {
+          "milestones": [30,80,120],
+          "gamma": 0.1
+      }
+    },
+  "ExponentialLR": {
+      "type": "ExponentialLR",
+      "args": {
+          "gamma": 0.1
+      }
+    },
+  "CosineAnnealingLR": {
+      "type": "StepLR",
+      "args": {
+          "T_max": 25,
+          "eta_min": 0
+      }
+    },
+
+  "ReduceLROnPlateau": {
+      "type": "ReduceLROnPlateau",
+      "args": {
+          "mode":"min",
+          "factor": 0.1,
+          "patience": 10,
+          "verbose": false,
+          "threshold": 0.0001,
+          "threshold_mode": "rel",
+          "cooldown": 0,
+          "min_lr": 0,
+          "eps": 1e-08
+      }
+    },
+
+   "CosineAnnealingWarmRestarts": {
+        "type": "CosineAnnealingWarmRestarts",
+    "args": {
+        "T_0": 15,
+        "T_mult": 1,
+        "eta_max": 0.001,
+        "T_up": 3,
+        "gamma": 0.5
+    }
+   },
+
+     "GradualWarmupScheduler": {
+        "type": "GradualWarmupScheduler",
+        "args": {
+           "multiplier": 1,
+           "total_epoch": 10,
+           "after_scheduler": {
+             "type": "ReduceLROnPlateau",
+              "args": {
+                  "mode":"min",
+                  "factor": 0.1,
+                  "patience": 10,
+                  "verbose": false,
+                  "threshold": 0.0001,
+                  "threshold_mode": "rel",
+                  "cooldown": 0,
+                  "min_lr": 0,
+                  "eps": 1e-08
+              }
+           }
+
+        }
+   }
+}
