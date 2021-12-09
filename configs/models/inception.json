@@ -1,0 +1,88 @@
+{
+    "name": "inception",
+    "n_gpu": 1,
+    "arch": {
+        "type": "InceptionTimeV2",
+        "args": {
+            "in_channels": 12,
+            "num_classes": 24,
+            "n_filters": 32,
+            "kernel_sizes": [9, 19, 39],
+            "bottleneck_channels": 32,
+            "n_blocks": 4
+        }
+    },
+    "data_loader": {
+        "type": "ChallengeDataLoader",
+        "args": {
+            "label_dir": "/home/yin/code/weiyuhua/All_data",
+             "split_index": "process/data_split/split1.mat",
+            "batch_size": 32,
+            "shuffle": true,
+            "num_workers": 6,
+            "resample_Fs":300,
+            "window_size":3000,
+            "n_segment":1,
+            "lead_number": 12
+        }
+    },
+ "optimizer": {
+        "args": {
+            "lr": 0.0005,
+            "amsgrad": true,
+            "weight_decay": 0.0001
+        },
+        "type": "Adam"
+    },
+    "loss": {
+        "type": "bce_with_logits_loss"
+    },
+    "metrics": [
+        "accuracy",
+        "f_measure",
+        "macro_f_beta_measure",
+        "macro_g_beta_measure",
+        "macro_auroc",
+        "macro_auprc",
+        "challenge_metric"
+    ],
+        "lr_scheduler": {
+        "args": {
+            "multiplier": 1.5,
+            "total_epoch": 5,
+            "after_scheduler": {
+                "args": {
+                    "min_lr": 0,
+                    "mode": "min",
+                    "threshold_mode": "rel",
+                    "factor": 0.1,
+                    "eps": 1e-08,
+                    "cooldown": 0,
+                    "patience": 6,
+                    "verbose": false,
+                    "threshold": 0.0001
+                },
+                "type": "ReduceLROnPlateau"
+            }
+        },
+        "type": "GradualWarmupScheduler"
+    },
+    "trainer": {
+        "epochs": 100,
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "max val_challenge_metric",
+        "early_stop": 15,
+        "tensorboard": false,
+        "only_scored_class": true
+
+    },
+    "evaluater": {
+        "result_dir": "saved/",
+        "verbosity": 2,
+        "visualization": {
+            "scatter": true
+        }
+    }
+}
